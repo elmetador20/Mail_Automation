@@ -2,54 +2,573 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>TEDx Mailer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TEDx Speaker Mailer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .dashboard {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .form-section {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+    }
+
+    .form-title {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      padding: 0.9rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    button {
+      padding: 0.9rem 2rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-send {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 1rem 3rem;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-send:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+    }
+
+    .btn-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #781305 0%, #8a0808 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .speakers-section {
+      margin-top: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      background: #e0e0e0;
+      color: #333;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .speaker-list {
+      list-style: none;
+    }
+
+    .speaker-card {
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 1.5rem;
+      transition: all 0.3s;
+      border-left: 4px solid #667eea;
+    }
+
+    .speaker-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .speaker-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .speaker-info {
+      flex: 1;
+    }
+
+    .speaker-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 0.3rem;
+    }
+
+    .speaker-email {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .speaker-topic {
+      color: #764ba2;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    .status-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-sent {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-not-sent {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-failed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .delete-btn {
+      background: #ff4757;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .delete-btn:hover {
+      background: #ee5a6f;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #999;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #667eea;
+      font-size: 1.1rem;
+    }
+
+    .toast {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: white;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: none;
+      align-items: center;
+      gap: 1rem;
+      animation: slideIn 0.3s;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      display: flex;
+    }
+
+    .toast.success {
+      border-left: 4px solid #28a745;
+    }
+
+    .toast.error {
+      border-left: 4px solid #dc3545;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .speaker-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>TEDx Speaker Mailer Dashboard</h2>
+  <div class="container">
+    <header>
+      <h1>🎤 TEDx Speaker Mailer</h1>
+      <p class="subtitle">Manage and invite speakers to your TEDx event</p>
+    </header>
 
-  <form id="speakerForm">
-    <input type="text" id="name" placeholder="Name" required />
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="text" id="topic" placeholder="Topic" required />
-    <button type="submit">Add Speaker</button>
-  </form>
+    <div class="dashboard">
+      <div class="stats" id="stats">
+        <div class="stat-card">
+          <div class="stat-number" id="totalSpeakers">0</div>
+          <div class="stat-label">Total Speakers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="sentCount">0</div>
+          <div class="stat-label">Invites Sent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="pendingCount">0</div>
+          <div class="stat-label">Pending</div>
+        </div>
+      </div>
 
-  <button id="sendMailsBtn">Send Invitations</button>
+      <div class="form-section">
+        <h2 class="form-title">➕ Add New Speaker</h2>
+        <form id="speakerForm">
+          <div class="form-grid">
+            <input type="text" id="name" placeholder="Full Name" required />
+            <input type="email" id="email" placeholder="Email Address" required />
+            <input type="text" id="topic" placeholder="Talk Topic" required />
+          </div>
+          <button type="submit" class="btn-primary">Add Speaker</button>
+        </form>
+      </div>
 
-  <ul id="speakerList"></ul>
+      <div style="text-align: center;">
+        <button id="sendMailsBtn" class="btn-send">
+          📧 Send All Invitations
+        </button>
+      </div>
+
+      <div class="speakers-section">
+        <div class="section-header">
+          <h2 class="section-title">📋 Speaker List</h2>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="sent">Sent</button>
+            <button class="filter-btn" data-filter="not_sent">Pending</button>
+          </div>
+        </div>
+        <ul class="speaker-list" id="speakerList">
+          <li class="loading">Loading speakers...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toastMessage"></span>
+  </div>
 
   <script>
     const API = "http://localhost:8080/api/mail";
+    let currentFilter = 'all';
+    let allSpeakers = [];
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      toast.className = `toast ${type} show`;
+      toastMessage.textContent = message;
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function getInitials(name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+
+    function updateStats() {
+      const total = allSpeakers.length;
+      const sent = allSpeakers.filter(s => s.mailStatus === 'sent').length;
+      const pending = allSpeakers.filter(s => s.mailStatus === 'not_sent').length;
+      
+      document.getElementById('totalSpeakers').textContent = total;
+      document.getElementById('sentCount').textContent = sent;
+      document.getElementById('pendingCount').textContent = pending;
+    }
+
+    function getStatusClass(status) {
+      if (status === 'sent') return 'status-sent';
+      if (status === 'not_sent') return 'status-not-sent';
+      return 'status-failed';
+    }
+
+    function getStatusText(status) {
+      if (status === 'sent') return 'Sent';
+      if (status === 'not_sent') return 'Pending';
+      return 'Failed';
+    }
+
+    function renderSpeakers() {
+      const list = document.getElementById('speakerList');
+      
+      let filtered = allSpeakers;
+      if (currentFilter !== 'all') {
+        filtered = allSpeakers.filter(s => s.mailStatus === currentFilter);
+      }
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <p>No speakers found</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(s => `
+        <li class="speaker-card">
+          <div class="speaker-avatar">${getInitials(s.name)}</div>
+          <div class="speaker-info">
+            <div class="speaker-name">${s.name}</div>
+            <div class="speaker-email">${s.email}</div>
+            <div class="speaker-topic">💡 ${s.topic}</div>
+          </div>
+          <span class="status-badge ${getStatusClass(s.mailStatus)}">
+            ${getStatusText(s.mailStatus)}
+          </span>
+          <button class="delete-btn" onclick="deleteSpeaker('${s.email}')">Delete</button>
+        </li>
+      `).join('');
+    }
 
     async function loadSpeakers() {
-      const res = await fetch(API + "/show_speakers");
-      const data = await res.json();
-      document.getElementById("speakerList").innerHTML =
-        data.map(s => `<li>${s.name} - ${s.mailStatus}--------${s.topic}</li>`).join("");
-        
-        console.log(data);
+      try {
+        const res = await fetch(API + "/show_speakers");
+        allSpeakers = await res.json();
+        updateStats();
+        renderSpeakers();
+      } catch (error) {
+        showToast('Failed to load speakers', 'error');
+        console.error(error);
+      }
     }
+
+    async function deleteSpeaker(email) {
+  if (!confirm('Are you sure you want to delete this speaker?')) return;
+
+  try {
+    await fetch(API + "/delSpeaker/{email}", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email })
+    });
+
+    showToast('Speaker deleted successfully');
+    loadSpeakers();
+  } catch (error) {
+    showToast('Failed to delete speaker', 'error');
+  }
+}
+
+
 
     document.getElementById("speakerForm").addEventListener("submit", async e => {
       e.preventDefault();
+      
       const speaker = {
         name: document.getElementById("name").value,
         email: document.getElementById("email").value,
         topic: document.getElementById("topic").value,
         status: "not_sent"
       };
-      await fetch(API + "/addSpeaker", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(speaker)
-      });
-      loadSpeakers();
+
+      try {
+        await fetch(API + "/addSpeaker", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(speaker)
+        });
+        
+        showToast('Speaker added successfully!');
+        e.target.reset();
+        loadSpeakers();
+      } catch (error) {
+        showToast('Failed to add speaker', 'error');
+        console.error(error);
+      }
     });
 
     document.getElementById("sendMailsBtn").addEventListener("click", async () => {
-      await fetch(API + "/sendInvites", { method: "POST" });
-      alert("Invitations sent!");
-      loadSpeakers();
+      const btn = document.getElementById("sendMailsBtn");
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      try {
+        await fetch(API + "/sendInvites", { method: "POST" });
+        showToast('All invitations sent successfully! 🎉');
+        loadSpeakers();
+      } catch (error) {
+        showToast('Failed to send invitations', 'error');
+        console.error(error);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "📧 Send All Invitations";
+      }
+    });
+
+    // Filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderSpeakers();
+      });
     });
 
     loadSpeakers();
