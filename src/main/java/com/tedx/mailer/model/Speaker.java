@@ -3,6 +3,8 @@ package com.tedx.mailer.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.mongodb.lang.NonNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,9 @@ import lombok.NoArgsConstructor;
 public class Speaker {
     @Id
     private String id;
+    @NonNull
     private String name;
+    @NonNull
     private String email;
     private String topic;
     private String mailStatus; // PENDING, SENT, FAILED
